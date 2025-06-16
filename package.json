@@ -5,6 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "start_haiku": "node -r dotenv/config --loader ts-node/esm src/haiku_poet.ts",
     "start_ramen": "node -r dotenv/config --loader ts-node/esm src/ramen_rag.ts"
   },
@@ -14,6 +18,11 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^24.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.5",
+    "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
