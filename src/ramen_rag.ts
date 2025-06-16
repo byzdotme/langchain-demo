@@ -1,6 +1,4 @@
 // 导入 LangChain 的核心模块和类型
-import { OllamaEmbeddings } from "@langchain/ollama";
-import { ChatOpenAI } from "@langchain/openai";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
@@ -11,12 +9,11 @@ import {
 } from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { Document } from "langchain/document"; // 导入 Document 类型
+import { deepseekChat, ollamaEmbeddings } from "./model_helper.js";
 
 // --- 配置信息 ---
 const RAMEN_REVIEWS_FILE: string = "./ramen_reviews.txt"; // 文档路径
-const OLLAMA_BASE_URL: string = "http://localhost:11434"; // Ollama 服务地址
-const CHAT_MODEL: string = "qwen:7b"; // 用于聊天的模型
-const EMBEDDINGS_MODEL: string = "nomic-embed-text"; // 用于生成嵌入的向量模型
+
 
 /**
  * 主函数，运行整个 RAG 流程
@@ -43,31 +40,10 @@ async function main(): Promise<void> {
   const splitDocs: Document[] = await splitter.splitDocuments(docs);
   console.log(`  文档被分割成 ${splitDocs.length} 个小块。`);
 
-  // 3. 初始化模型 (Initialize Models)
-  // ------------------------------------------
-  console.log("\n[步骤 3] 初始化 Ollama 模型...");
-  const embeddings: OllamaEmbeddings = new OllamaEmbeddings({
-    model: EMBEDDINGS_MODEL,
-    baseUrl: OLLAMA_BASE_URL,
-  });
-  console.log(`  嵌入模型: ${EMBEDDINGS_MODEL}`);
-
-  const llm: ChatOpenAI = new ChatOpenAI({
-    temperature: 0.7,
-    model: "deepseek-chat",
-    configuration: {
-      baseURL: "https://api.deepseek.com",
-      apiKey: process.env["DEEPSEEK_API_KEY"] || "",
-    },
-  });
-  console.log(`  聊天模型: ${CHAT_MODEL}`);
-
-  // 4. 创建向量存储和检索器 (Embed & Store & Retrieve)
-  // ------------------------------------------
-  console.log("\n[步骤 4] 创建向量存储和检索器...");
+  console.log("\n[步骤 3] 创建向量存储和检索器...");
   const vectorstore: MemoryVectorStore = await MemoryVectorStore.fromDocuments(
     splitDocs,
-    embeddings
+    ollamaEmbeddings
   );
   console.log("  内存向量存储创建成功。");
 
@@ -76,9 +52,9 @@ async function main(): Promise<void> {
   });
   console.log("  检索器创建成功，将返回最相关的3个文档块。");
 
-  // 5. 构建 RAG 链 (Chain)
+  // 4. 构建 RAG 链 (Chain)
   // ------------------------------------------
-  console.log("\n[步骤 5] 构建 RAG 链...");
+  console.log("\n[步骤 4] 构建 RAG 链...");
 
   const promptTemplate: string = `
 你是一个专业的拉面店顾问。请根据下面提供的“上下文信息”，用中文简洁地回答用户的问题。
@@ -110,14 +86,14 @@ async function main(): Promise<void> {
       question: new RunnablePassthrough(),
     },
     prompt,
-    llm,
+    deepseekChat,
     new StringOutputParser(),
   ]);
   console.log("  RAG 链构建完成！");
 
-  // 6. 执行链并提问 (Invoke)
+  // 5. 执行链并提问 (Invoke)
   // ------------------------------------------
-  console.log("\n[步骤 6] 执行链并开始提问...");
+  console.log("\n[步骤 5] 执行链并开始提问...");
 
   const questions: string[] = [
     "一乐拉面有没有素食选项？",
