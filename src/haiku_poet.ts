@@ -1,9 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 // 读取命令行参数
 const topic = process.argv[2];

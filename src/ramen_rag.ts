@@ -11,7 +11,6 @@ import {
 } from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { Document } from "langchain/document"; // 导入 Document 类型
-import dotenv from "dotenv";
 
 // --- 配置信息 ---
 const RAMEN_REVIEWS_FILE: string = "./ramen_reviews.txt"; // 文档路径
@@ -23,7 +22,6 @@ const EMBEDDINGS_MODEL: string = "nomic-embed-text"; // 用于生成嵌入的向
  * 主函数，运行整个 RAG 流程
  */
 async function main(): Promise<void> {
-  dotenv.config();
 
   console.log("🍜 开始构建拉面店顾问 RAG 应用 (TypeScript 版本)...");
 

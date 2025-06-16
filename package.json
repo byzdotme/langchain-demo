@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start_haiku": "node --loader ts-node/esm src/haiku_poet.ts",
-    "start_ramen": "node --loader ts-node/esm src/ramen_rag.ts"
+    "start_haiku": "node -r dotenv/config --loader ts-node/esm src/haiku_poet.ts",
+    "start_ramen": "node -r dotenv/config --loader ts-node/esm src/ramen_rag.ts"
   },
   "keywords": [],
   "author": "",
