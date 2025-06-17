@@ -1,15 +1,2 @@
-# 依赖和构建产物
 node_modules
-dist
-build
-.nuxt
-.next
-
-# 锁文件
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# 日志和缓存
-*.log
-.DS_Store
+dist 

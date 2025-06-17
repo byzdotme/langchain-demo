@@ -1,51 +1,53 @@
-import { defineConfig, globalIgnores } from 'eslint/config';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import globals from 'globals';
+// @ts-check
+/**
+ * ESLint Flat Config (ESM)
+ * 参考 typescript-eslint 官方示例，集成 Prettier
+ */
+
+import eslint from '@eslint/js';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import globals from 'globals';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
-export default defineConfig([
-  globalIgnores(['**/.eslintrc.json', '**/dist/', '**/node_modules/']),
+export default [
+  // Ignore patterns（替代 .eslintignore）
   {
-    extends: compat.extends(
-      'eslint:recommended',
-      'plugin:@typescript-eslint/recommended',
-      'plugin:@typescript-eslint/recommended-type-checked',
-      'prettier'
-    ),
-
-    plugins: {
-      '@typescript-eslint': typescriptEslint,
-    },
-
+    ignores: ['**/node_modules/**', '**/dist/**'],
+  },
+  // 为所有文件提供 Node 环境内置全局变量，避免 no-undef
+  {
     languageOptions: {
       globals: {
         ...globals.node,
       },
-
-      parser: tsParser,
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-
-      parserOptions: {
-        project: './tsconfig.json',
-      },
-    },
-
-    rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-vars': 'warn',
     },
   },
-]);
+  // JavaScript 基础推荐规则
+  eslint.configs.recommended,
+  // TypeScript 文件规则
+  {
+    files: ['**/*.ts'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
+      sourceType: 'module',
+      ecmaVersion: 'latest',
+      globals: {
+        ...globals.node,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      ...tsPlugin.configs.recommended.rules,
+      ...tsPlugin.configs.stylistic.rules,
+    },
+  },
+  // 关闭与 Prettier 冲突的格式化规则
+  eslintConfigPrettier,
+];

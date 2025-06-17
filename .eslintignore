@@ -1,0 +1,3 @@
+# 忽略已编译/生成的文件
+node_modules
+/dist 

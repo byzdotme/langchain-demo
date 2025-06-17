@@ -9,7 +9,7 @@ import { Document } from 'langchain/document'; // 导入 Document 类型
 import { deepseekChat, ollamaEmbeddings } from './model_helper.js';
 
 // --- 配置信息 ---
-const RAMEN_REVIEWS_FILE: string = './ramen_reviews.txt'; // 文档路径
+const RAMEN_REVIEWS_FILE = './ramen_reviews.txt'; // 文档路径
 
 /**
  * 主函数，运行整个 RAG 流程
@@ -50,7 +50,7 @@ async function main(): Promise<void> {
   // ------------------------------------------
   console.log('\n[步骤 4] 构建 RAG 链...');
 
-  const promptTemplate: string = `
+  const promptTemplate = `
 你是一个专业的拉面店顾问。请根据下面提供的“上下文信息”，用中文简洁地回答用户的问题。
 你的回答必须完全基于上下文信息，不要编造任何内容。
 如果上下文中没有足够的信息来回答问题，请直接说“根据我所知的信息，无法回答这个问题”。
@@ -72,7 +72,7 @@ async function main(): Promise<void> {
 
   // 使用 LCEL 构建链，并为链指定输入和输出类型
   // RunnableSequence<string, string> 表示这个链接收一个字符串输入，并返回一个字符串输出
-  const chain: RunnableSequence<any, string> = RunnableSequence.from([
+  const chain: RunnableSequence<unknown, string> = RunnableSequence.from([
     {
       context: retriever.pipe(formatDocs),
       question: new RunnablePassthrough(),
