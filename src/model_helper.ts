@@ -1,4 +1,4 @@
-import { OllamaEmbeddings } from '@langchain/ollama';
+import { ChatOllama, OllamaEmbeddings } from '@langchain/ollama';
 import { ChatOpenAI } from '@langchain/openai';
 
 export function newDeepseekChat(reasoner = true, temperature = 0.5): ChatOpenAI {
@@ -10,6 +10,13 @@ export function newDeepseekChat(reasoner = true, temperature = 0.5): ChatOpenAI 
       baseURL: 'https://api.deepseek.com',
       apiKey: process.env['DEEPSEEK_API_KEY'] || '',
     },
+  });
+}
+
+export function newOllamaChat(model: string, temperature = 0.5): ChatOllama {
+  return new ChatOllama({
+    model,
+    temperature,
   });
 }
 

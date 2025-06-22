@@ -10,7 +10,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "start_haiku": "node -r dotenv/config --loader ts-node/esm src/haiku_poet.ts",
-    "start_ramen": "node -r dotenv/config --loader ts-node/esm src/ramen_rag.ts"
+    "start_ramen": "node -r dotenv/config --loader ts-node/esm src/ramen_rag.ts",
+    "start_tour": "node -r dotenv/config --loader ts-node/esm src/tour_planner.ts",
+    "start_smart_home": "node -r dotenv/config --loader ts-node/esm src/smart_home_agent.ts",
+    "start_research": "node -r dotenv/config --loader ts-node/esm src/research_graph.ts"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +37,7 @@
     "@langchain/ollama": "^0.2.1",
     "@langchain/openai": "^0.5.13",
     "dotenv": "^16.5.0",
-    "langchain": "^0.3.28"
+    "langchain": "^0.3.28",
+    "zod": "^3.25.67"
   }
 }
